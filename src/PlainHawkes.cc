@@ -725,3 +725,60 @@ void PlainHawkes::Simulate(const unsigned& n, const unsigned& num_sequences, std
 	}
 
 }
+
+std::pair<double, double> PlainHawkes::EvaluateTestSeqs(std::vector<Sequence>& sequences, double testRatio){
+	Eigen::Map<Eigen::VectorXd> Lambda0_ = Eigen::Map<Eigen::VectorXd>(parameters_.segment(0, num_dims_).data(), num_dims_);
+
+	Eigen::Map<Eigen::MatrixXd> Alpha_ = Eigen::Map<Eigen::MatrixXd>(parameters_.segment(num_dims_, num_dims_ * num_dims_).data(), num_dims_, num_dims_);
+
+
+	double MAP = 0;
+	double err_cnt = 0;
+	double totalCNT = 0;
+
+	for(unsigned seqIndex=0; seqIndex<sequences.size(); seqIndex++){
+		std::vector<Event> seqEvents = sequences[seqIndex].GetEvents();
+		std::pair<double, double> metric = EvaluateASeq(seqEvents, testRatio, Lambda0_, Alpha_);
+		totalCNT += metric.first;
+		err_cnt += metric.second;
+	}
+
+	return std::make_pair(err_cnt, totalCNT);	
+}
+
+std::pair<double, double> PlainHawkes::EvaluateASeq(std::vector<Event>& seq, double testRatio, Eigen::VectorXd Lambda0_, Eigen::MatrixXd Alpha_){
+	int testStartIndex = (int)seq.size()*testRatio;
+
+	double err_cnt = 0;
+	double totalCNT = seq.size()-testStartIndex;
+	//// dimensionID or marker
+	for(unsigned k=testStartIndex; k<seq.size(); ++k){
+		unsigned itemID = seq[k].DimentionID;
+		double itemTime = seq[k].time;
+
+		Eigen::VectorXd intensity_dim = Eigen::VectorXd::Zero(num_dims_);
+		intensity_dim = Lambda0_;
+		for(int i=0; i<testStartIndex; ++i){
+				for(unsigned d=0; d<num_dims_; ++d){
+					intensity_dim[d] += Alpha_(seq[i].DimentionID, d)* exp(-Beta_(seq[i].DimentionID, d) * (itemTime - seq[i].time));
+			} 	
+		}
+
+		unsigned maxPredict = 0;
+		double maxIntensity = 0;
+		for(unsigned d=0; d<num_dims_; ++d){
+			if(intensity_dim[d] > maxIntensity){
+				maxPredict = d;
+				maxIntensity = intensity_dim[d];
+			}
+		}
+
+		if (maxPredict != itemID){
+			err_cnt += 1;
+		}
+	}
+
+	// err_cnt /= totalCNT
+
+	return std::make_pair(err_cnt, totalCNT);
+}

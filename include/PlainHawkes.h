@@ -97,6 +97,8 @@ protected:
  */
 	void UpdateExpSum(double t, const Eigen::VectorXd& last_event_per_dim, Eigen::MatrixXd& expsum);
 
+	std::pair<double, double> EvaluateASeq(std::vector<Event>& seq, double testRatio, Eigen::VectorXd Lambda0_, Eigen::MatrixXd Alpha_);
+
 public:
 
 	/**
@@ -301,6 +303,8 @@ public:
  */
 	void Simulate(const unsigned& n, const unsigned& num_sequences, std::vector<Sequence>& sequences);
 
+
+	std::pair<double, double> EvaluateTestSeqs(std::vector<Sequence>& sequences, double testRatio);
 };
 
 #endif
