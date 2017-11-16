@@ -93,7 +93,7 @@ int main(const int argc, const char** argv)
 	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
 	unsigned n = 40;
-	unsigned num_sequences = 10000;
+	unsigned num_sequences = 6000;
 	ot.Simulate(hawkes, n, num_sequences, sequences);
 
 	std::vector<Sequence> trainSequences;
@@ -116,31 +116,31 @@ int main(const int argc, const char** argv)
 	std::string testSeqTimeFileName = "testSeqTime.txt";
 	outputSeq(trainSequences, trainSeqActionFileName, trainSeqTimeFileName, testSequences, testSeqActionFileName, testSeqTimeFileName);
 
-	PlainHawkes hawkes_new(num_params, dim, beta);
+	// PlainHawkes hawkes_new(num_params, dim, beta);
 	
-	PlainHawkes::OPTION options;
-	options.base_intensity_regularizer = PlainHawkes::NONE;
-	options.excitation_regularizer = PlainHawkes::NUCLEAR;
-	options.coefficients[PlainHawkes::BETA] = 0.1;
-	options.ini_learning_rate = 5e-5;
-	options.rho = 1;
-	options.ub_nuclear = 1;
-	options.ini_max_iter = 1000;
-	hawkes_new.fit(trainSequences, options, params);
+	// PlainHawkes::OPTION options;
+	// options.base_intensity_regularizer = PlainHawkes::NONE;
+	// options.excitation_regularizer = PlainHawkes::NUCLEAR;
+	// options.coefficients[PlainHawkes::BETA] = 0.1;
+	// options.ini_learning_rate = 5e-5;
+	// options.rho = 1;
+	// options.ub_nuclear = 1;
+	// options.ini_max_iter = 1000;
+	// hawkes_new.fit(trainSequences, options, params);
 	
-	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-	std::cout << "Simulating" << num_sequences << "sequences *" << n << "events," << dim << "nodes" << duration / 1000000.0 << " secs." << std::endl;
+	// std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+	// auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+	// std::cout << "Simulating" << num_sequences << "sequences *" << n << "events," << dim << "nodes" << duration / 1000000.0 << " secs." << std::endl;
 
-	std::cout << "Estimated Parameters : " << std::endl;
-	std::cout << hawkes_new.GetParameters().transpose() << std::endl;
-	std::cout << "True Parameters : " << std::endl;
-	std::cout << params.transpose() << std::endl;
+	// std::cout << "Estimated Parameters : " << std::endl;
+	// std::cout << hawkes_new.GetParameters().transpose() << std::endl;
+	// std::cout << "True Parameters : " << std::endl;
+	// std::cout << params.transpose() << std::endl;
 
-	double testRatio = 0.8;
-	std::pair<double, double> metric = hawkes_new.EvaluateTestSeqs(testSequences, testRatio);
-	double err_cnt = metric.first*1.0/metric.second;
-	std::cout << metric.first << "\t" << metric.second << "\terr_cnt\t" << err_cnt << std::endl;
+	// double testRatio = 0.8;
+	// std::pair<double, double> metric = hawkes_new.EvaluateTestSeqs(testSequences, testRatio);
+	// double err_cnt = metric.first*1.0/metric.second;
+	// std::cout << metric.first << "\t" << metric.second << "\terr_cnt\t" << err_cnt << std::endl;
 
 	return 0;
 }
