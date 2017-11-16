@@ -55,15 +55,15 @@ int main(const int argc, const char** argv)
 /**
  * Generate a 5-by-5 matrix with rank 2.
  */
-	Eigen::MatrixXd B1 = Eigen::MatrixXd::zero(dim,9).array();
-	Eigen::MatrixXd B2 = Eigen::MatrixXd::zero(dim,9).array();
+	Eigen::MatrixXd B1 = Eigen::MatrixXd::Zero(dim,9).array();
+	Eigen::MatrixXd B2 = Eigen::MatrixXd::Zero(dim,9).array();
 
 	int lowRank = 9;
 	int lowNode = dim/10;
 	for(int i=1; i<=9; i++){
 		for(int j=lowNode*(i-1); j<lowNode*(i+1)+1; j++){
-			B1(j, i-1) = rand()*0.1
-			B2(j, i-1) = rand()*0.1
+			B1(j, i-1) = rand()*0.1;
+			B2(j, i-1) = rand()*0.1;
 		}
 	}
 /**
