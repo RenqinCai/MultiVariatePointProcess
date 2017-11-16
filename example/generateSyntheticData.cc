@@ -47,20 +47,20 @@ void outputSeq(std::vector<Sequence> & trainSequences, std::string trainSeqActio
 
 int main(const int argc, const char** argv)
 {
-	unsigned dim = 100, num_params = dim * (dim + 1);
+	unsigned dim = 20, num_params = dim * (dim + 1);
 	Eigen::VectorXd params(num_params);
 
-	Eigen::MatrixXd B1 = Eigen::MatrixXd::Zero(dim,9).array();
-	Eigen::MatrixXd B2 = Eigen::MatrixXd::Zero(dim,9).array();
+	Eigen::MatrixXd B1 = Eigen::MatrixXd::Random(dim,9).array()+1;
+	Eigen::MatrixXd B2 = Eigen::MatrixXd::Random(dim,9).array()+1;
 
-	int lowRank = 9;
-	int lowNode = dim/10;
-	for(int i=1; i<=lowRank; i++){
-		for(int j=lowNode*(i-1); j<lowNode*(i+1)+1; j++){
-			B1(j, i-1) = rand()*0.1;
-			B2(j, i-1) = rand()*0.1;
-		}
-	}
+	// int lowRank = 9;
+	// int lowNode = dim/10;
+	// for(int i=1; i<=lowRank; i++){
+	// 	for(int j=lowNode*(i-1); j<lowNode*(i+1)+1; j++){
+	// 		B1(j, i-1) = rand()*0.1;
+	// 		B2(j, i-1) = rand()*0.1;
+	// 	}
+	// }
 
 	Eigen::MatrixXd B = B1 * B2.transpose()/9;
 	
