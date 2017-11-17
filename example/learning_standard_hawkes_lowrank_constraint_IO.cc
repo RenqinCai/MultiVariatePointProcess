@@ -7,88 +7,55 @@
 #include <fstream>
 #include <string>
 
-//using namespace std;
-
-void outputSeq(std::vector<Sequence> & trainSequences, std::string trainSeqActionFileName, std::string trainSeqTimeFileName, std::vector<Sequence> & testSequences, std::string testSeqActionFileName, std::string testSeqTimeFileName){
-	
-	std::ofstream trainActionFile(trainSeqActionFileName);
-	std::ofstream trainTimeFile(trainSeqTimeFileName);
-	if(trainActionFile.is_open() && trainTimeFile.is_open()){
-		for(std::vector<Sequence>::iterator it=trainSequences.begin(); it!=trainSequences.end(); it++){
-			std::vector<Event> seqEvents = it->GetEvents();
-			for(unsigned k=0; k<seqEvents.size(); k++){
-				trainActionFile << seqEvents[k].DimentionID << "\t";
-				trainTimeFile << seqEvents[k].time << "\t";
-			}
-			trainActionFile << "\n";
-			trainTimeFile << "\n";
-		}
-		trainActionFile.close();
-		trainTimeFile.close();
-	}else
-		std::cout << "unable to train seq open file";
-	
-	std::ofstream testActionFile(testSeqActionFileName);
-	std::ofstream testTimeFile(testSeqTimeFileName);
-	if(testActionFile.is_open() && testTimeFile.is_open()){
-		for(std::vector<Sequence>::iterator it=testSequences.begin(); it!=testSequences.end(); it++){
-			std::vector<Event> seqEvents = it->GetEvents();
-			for(unsigned k=0; k<seqEvents.size(); k++){
-				testActionFile << seqEvents[k].DimentionID << "\t";
-				testTimeFile << seqEvents[k].time << "\t";
-			}
-			testActionFile << "\n";
-			testTimeFile << "\n";
-		}
-		testActionFile.close();
-		testTimeFile.close();
-	}else
-		std::cout << "unable to test seq open file";
-	
-}
+//using namespace std
 
 int main(const int argc, const char** argv)
 {
 	// unsigned dim = 5, num_params = dim * (dim + 1);
-	unsigned dim = 100, num_params = dim * (dim + 1);
+	// unsigned dim = 100, num_params = dim * (dim + 1);
 
 /**
  * Generate a 5-by-5 matrix with rank 2.
  */
-	Eigen::MatrixXd B1 = Eigen::MatrixXd::Zero(dim,9).array();
-	Eigen::MatrixXd B2 = Eigen::MatrixXd::Zero(dim,9).array();
+	// Eigen::MatrixXd B1 = Eigen::MatrixXd::Zero(dim,9).array();
+	// Eigen::MatrixXd B2 = Eigen::MatrixXd::Zero(dim,9).array();
 
-	int lowRank = 9;
-	int lowNode = dim/10;
-	for(int i=1; i<=lowRank; i++){
-		for(int j=lowNode*(i-1); j<lowNode*(i+1); j++){
-			B1(j, i-1) = rand()*0.1;
-			B2(j, i-1) = rand()*0.1;
-		}
-	}
+	// int lowRank = 9;
+	// int lowNode = dim/10;
+	// for(int i=1; i<=lowRank; i++){
+	// 	for(int j=lowNode*(i-1); j<lowNode*(i+1); j++){
+	// 		B1(j, i-1) = rand()*0.1;
+	// 		B2(j, i-1) = rand()*0.1;
+	// 	}
+	// }
 /**
  * Simply guarantee the stationary condition of the mulivariate Hawkes process.
  */
-	Eigen::MatrixXd B = B1 * B2.transpose()/9;
+	// Eigen::MatrixXd B = B1 * B2.transpose()/9;
 
-	Eigen::EigenSolver<Eigen::MatrixXd> es(B);
+	// Eigen::EigenSolver<Eigen::MatrixXd> es(B);
 
-	OgataThinning ot(dim);
+	// OgataThinning ot(dim);
 
-	Eigen::VectorXd params(num_params);
+	// Eigen::VectorXd params(num_params);
 	
-	Eigen::Map<Eigen::VectorXd> Lambda0 = Eigen::Map<Eigen::VectorXd>(params.segment(0, dim).data(), dim);
-	Eigen::Map<Eigen::MatrixXd> A = Eigen::Map<Eigen::MatrixXd>(params.segment(dim, dim * dim).data(), dim, dim);
+	// Eigen::Map<Eigen::VectorXd> Lambda0 = Eigen::Map<Eigen::VectorXd>(params.segment(0, dim).data(), dim);
+	// Eigen::Map<Eigen::MatrixXd> A = Eigen::Map<Eigen::MatrixXd>(params.segment(dim, dim * dim).data(), dim, dim);
 
-	Lambda0 = Eigen::VectorXd::Constant(dim, 0.1);
-	A = B;
+	// Lambda0 = Eigen::VectorXd::Constant(dim, 0.1);
+	// A = B;
+
+	std::vector<Sequence> sequences;
+
+	unsigned dim = 100;
+
+	ImportFromExistingUserItemSequences("data/timeFileName", "data/eventFileName", sequences);
+	unsigned num_params = dim*(dim+1);
 
 	Eigen::MatrixXd beta = Eigen::MatrixXd::Constant(dim,dim,1.0);
 
 	PlainHawkes hawkes(num_params, dim, beta);
 	hawkes.SetParameters(params);
-
-	std::vector<Sequence> sequences;
 
 	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
