@@ -20,12 +20,9 @@ void PlainHawkes::Initialize(const std::vector<Sequence>& data)
 {
 	num_sequences_ = data.size();
 
-	std::cout << "step 0" << num_sequences_ << std::endl;
-
 	all_exp_kernel_recursive_sum_ = std::vector<std::vector<std::vector<Eigen::VectorXd> > >(num_sequences_, std::vector<std::vector<Eigen::VectorXd> >(
           num_dims_, std::vector<Eigen::VectorXd>(num_dims_, Eigen::VectorXd())));
 
-	std::cout << "recursive kernel" << num_dims_ << std::endl;
 	// all_timestamp_per_dimension_ = std::vector<std::vector<std::vector<double> > >(num_sequences_, std::vector<std::vector<double> > (num_dims_, std::vector<double> ()));
 	// for(unsigned c = 0; c < num_sequences_; ++ c)
 	// {
@@ -39,8 +36,6 @@ void PlainHawkes::Initialize(const std::vector<Sequence>& data)
 	// }
 
 	InitializeDimension(data);
-
-	std::cout << "InitializeDimension" << std::endl;
 
 	for (unsigned k = 0; k < num_sequences_; ++k) 
 	{
@@ -93,13 +88,9 @@ void PlainHawkes::Initialize(const std::vector<Sequence>& data)
 		}
 	}
 
-	std::cout << "step3" << std::endl;
-
 	observation_window_T_ = Eigen::VectorXd::Zero(num_sequences_);
 
   	intensity_itegral_features_ = std::vector<Eigen::MatrixXd> (num_sequences_, Eigen::MatrixXd::Zero(num_dims_, num_dims_));
-
-  	std::cout << "step4" << std::endl;
 
   	for (unsigned c = 0; c < num_sequences_; ++c) {
 
@@ -116,8 +107,6 @@ void PlainHawkes::Initialize(const std::vector<Sequence>& data)
 	      }
 	  	}
 	}
-
-	std::cout << "step5" << std::endl;
 
 }
 
