@@ -42,7 +42,7 @@ int main(const int argc, const char** argv)
 
 	unsigned dim = 30;
 
-	ImportFromExistingUserItemSequences("data/timeFileName", "data/eventFileName", sequences);
+	ImportFromExistingTimeEventsSequences("data/timeFileName", "data/eventFileName", sequences);
 	Eigen::VectorXd beta = Eigen::VectorXd::Constant(dim, 1.0);
 
 	unsigned num_params = dim*(dim+1);
