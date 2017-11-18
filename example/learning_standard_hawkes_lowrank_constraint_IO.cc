@@ -47,8 +47,8 @@ int main(const int argc, const char** argv)
 	hawkes_new.fit(trainSequences, options, params);
 
 	std::cout << "Estimated Parameters : " << std::endl;
-	std::cout << hawkes_new.GetParameters().transpose() << std::endl;
-	std::cout << "True Parameters : " << std::endl;
+	// std::cout << hawkes_new.GetParameters().transpose() << std::endl;
+	// std::cout << "True Parameters : " << std::endl;
 	// std::cout << params.transpose() << std::endl;
 
 	// double testRatio = 0.8;
@@ -57,7 +57,7 @@ int main(const int argc, const char** argv)
 	// std::cout << metric.first << "\t" << metric.second << "\terr_cnt\t" << err_cnt << std::endl;
 
 	std::string estimatedParamFile = "lowrank_hawkes_estimatedParam.txt";
-	saveParameters(params, estimatedParamFile);
+	saveParameters(hawkes_new.GetParameters().transpose(), estimatedParamFile);
 
 	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();

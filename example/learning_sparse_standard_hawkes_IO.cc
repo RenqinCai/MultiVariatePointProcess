@@ -37,7 +37,7 @@ int main(const int argc, const char** argv)
 	// ot.Simulate(hawkes, num_events, num_sequences, sequences);
 	std::vector<Sequence> sequences;
 
-	unsigned dim = 1000;
+	unsigned dim = 30;
 
 	ImportFromExistingUserItemSequences("data/timeFileName", "data/eventFileName", sequences);
 	Eigen::VectorXd beta = Eigen::VectorXd::Constant(dim, 1.0);
@@ -54,10 +54,10 @@ int main(const int argc, const char** argv)
 	hawkes_new.fit(sequences, options);
 	
 	std::cout << "Estimated Parameters : " << std::endl;
-	std::cout << hawkes_new.GetParameters().transpose() << std::endl;
-	std::cout << "True Parameters : " << std::endl;
+	// std::cout << hawkes_new.GetParameters().transpose() << std::endl;
+	// std::cout << "True Parameters : " << std::endl;
 	std::string estimatedParamFile = "sparse_hawkes_estimatedParam.txt";
-	saveParameters(params, estimatedParamFile);
+	saveParameters(hawkes_new.GetParameters().transpose(), estimatedParamFile);
 	// std::cout << params.transpose() << std::endl;
 
 	return 0;
