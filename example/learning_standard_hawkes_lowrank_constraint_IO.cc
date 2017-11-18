@@ -44,6 +44,9 @@ int main(const int argc, const char** argv)
 	options.rho = 1;
 	options.ub_nuclear = 1;
 	options.ini_max_iter = 1000;
+
+	Eigen::VectorXd params(num_params);
+
 	hawkes_new.fit(trainSequences, options, params);
 
 	std::cout << "Estimated Parameters : " << std::endl;
