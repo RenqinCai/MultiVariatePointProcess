@@ -20,12 +20,12 @@ void PlainHawkes::Initialize(const std::vector<Sequence>& data)
 {
 	num_sequences_ = data.size();
 
-	std::cout << "step 0" << std::endl;
+	std::cout << "step 0" << num_sequences_ << std::endl;
 
 	all_exp_kernel_recursive_sum_ = std::vector<std::vector<std::vector<Eigen::VectorXd> > >(num_sequences_, std::vector<std::vector<Eigen::VectorXd> >(
           num_dims_, std::vector<Eigen::VectorXd>(num_dims_, Eigen::VectorXd())));
 
-	std::cout << "recursive kernel" << std::endl;
+	std::cout << "recursive kernel" << num_dims_ << std::endl;
 	// all_timestamp_per_dimension_ = std::vector<std::vector<std::vector<double> > >(num_sequences_, std::vector<std::vector<double> > (num_dims_, std::vector<double> ()));
 	// for(unsigned c = 0; c < num_sequences_; ++ c)
 	// {
