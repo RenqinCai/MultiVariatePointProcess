@@ -47,7 +47,7 @@ int main(const int argc, const char** argv)
 
 	Eigen::VectorXd params(num_params);
 
-	hawkes_new.fit(trainSequences, options, params);
+	hawkes_new.fit(sequences, options, params);
 
 	std::cout << "Estimated Parameters : " << std::endl;
 	// std::cout << hawkes_new.GetParameters().transpose() << std::endl;
