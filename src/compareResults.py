@@ -9,7 +9,7 @@ def readEstimatedParam(paramFile):
 
 		lineLen = len(line)
 		for lineIndex in range(lineLen):
-			paramList.append(line[lineIndex])
+			paramList.append(float(line[lineIndex]))
 
 	return paramList
 
@@ -25,7 +25,7 @@ def readTrueParam(lambdaFile, alphaFile):
 		lineLen = len(line)
 
 		for lineIndex in range(lineLen):
-			paramList.append(line[lineIndex])
+			paramList.append(float(line[lineIndex]))
 
 	lambdaF.close()
 
@@ -34,7 +34,7 @@ def readTrueParam(lambdaFile, alphaFile):
 		lineLen = len(line)
 
 		for lineIndex in range(lineLen):
-			paramList.append(line[lineIndex])
+			paramList.append(float(line[lineIndex]))
 
 	alphaF.close()
 
