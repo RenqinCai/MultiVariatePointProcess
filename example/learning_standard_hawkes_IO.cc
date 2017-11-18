@@ -4,6 +4,15 @@
 #include "OgataThinning.h"
 #include "PlainHawkes.h"
 
+void saveParameters(Eigen::VectorXd params, std::string estimatedParamFileName){
+	std::ofstream estimatedParamFile(estimatedParamFileName);
+
+	if(estimatedParamFile.is_open()){
+		estimatedParamFile << params.transpose() << std::endl;
+	}
+	estimatedParamFile.close();
+}
+
 int main(const int argc, const char** argv)
 {
 	// unsigned dim = 2, num_params = dim * (dim + 1);
@@ -46,7 +55,9 @@ int main(const int argc, const char** argv)
 	std::cout << "Estimated Parameters : " << std::endl;
 	std::cout << hawkes_new.GetParameters().transpose() << std::endl;
 	std::cout << "True Parameters : " << std::endl;
-	std::cout << params.transpose() << std::endl;
+	std::string estimatedParamFile = "standard_hawkes_estimatedParam.txt";
+	saveParameters(params, estimatedParamFile);
+	// std::cout << params.transpose() << std::endl;
 
 	return 0;
 }

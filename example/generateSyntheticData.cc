@@ -62,7 +62,6 @@ void saveParameters(unsigned dim, Eigen::MatrixXd A, Eigen::VectorXd Lambda0, st
 	lambdaFile.close();
 }
 
-
 int main(const int argc, const char** argv)
 {
 	unsigned dim = 20, num_params = dim * (dim + 1);
