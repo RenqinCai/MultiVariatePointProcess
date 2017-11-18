@@ -3,6 +3,9 @@
 #include "Sequence.h"
 #include "OgataThinning.h"
 #include "PlainHawkes.h"
+#include <chrono>
+#include <fstream>
+#include <string>
 
 void saveParameters(Eigen::VectorXd params, std::string estimatedParamFileName){
 	std::ofstream estimatedParamFile(estimatedParamFileName);
