@@ -64,10 +64,10 @@ void saveParameters(unsigned dim, Eigen::MatrixXd A, Eigen::VectorXd Lambda0, st
 
 int main(const int argc, const char** argv)
 {
-	unsigned dim = 20, num_params = dim * (dim + 1);
+	unsigned dim = 30, num_params = dim * (dim + 1);
 	Eigen::VectorXd params(num_params);
 
-	int lowRank = 9;
+	int lowRank = 6;
 	int lowNode = dim/lowRank;
 
 	Eigen::MatrixXd B1 = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
@@ -101,7 +101,7 @@ int main(const int argc, const char** argv)
 
 	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
-	unsigned num_events = 10, num_sequences = 10;
+	unsigned num_events = 50, num_sequences = 4000;
 	std::cout << "1. Simulating " << num_sequences << " sequences with " << num_events << " events each " << std::endl;
 	ot.Simulate(hawkes, num_events, num_sequences, sequences);
 

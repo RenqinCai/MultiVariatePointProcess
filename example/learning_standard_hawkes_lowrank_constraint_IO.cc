@@ -24,7 +24,7 @@ int main(const int argc, const char** argv)
 
 	std::vector<Sequence> sequences;
 
-	unsigned dim = 1000;
+	unsigned dim = 30;
 
 	ImportFromExistingUserItemSequences("data/timeFileName", "data/eventFileName", sequences);
 	
