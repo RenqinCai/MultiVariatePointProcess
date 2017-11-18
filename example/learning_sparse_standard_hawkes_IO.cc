@@ -27,7 +27,7 @@ int main(const int argc, const char** argv)
 	// ot.Simulate(hawkes, num_events, num_sequences, sequences);
 	std::vector<Sequence> sequences;
 
-	unsigned dim = 100;
+	unsigned dim = 1000;
 
 	ImportFromExistingUserItemSequences("data/timeFileName", "data/eventFileName", sequences);
 	Eigen::VectorXd beta = Eigen::VectorXd::Constant(dim, 1.0);

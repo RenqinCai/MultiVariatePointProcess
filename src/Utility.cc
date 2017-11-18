@@ -165,6 +165,43 @@ void ImportFromExistingSequences(const std::string& filename, std::vector<Sequen
 
 }
 
+void ImportFromExistingTimeEventsSequences(const std::string &timeFileName, const std::string &eventFileName, std::vector<Sequence>&data){
+    std::ifstream timeFin(timeFileName.c_str());
+    std::ifstream eventFin(eventFileName.c_str());
+    std::string timeStr;
+    std::string eventStr;
+
+    unsigned seqID = 0;
+    while(std::getline(timeFin, timeStr)){
+        std::vector<std::string> timeParts = SeperateLineWordsVector(timeStr, "\t");
+        
+        Sequence seq;
+
+        if(std::getline(eventFin, eventStr)){
+              
+        }else{
+            std::cout << "missing event seq" << std::endl;
+        }
+
+        std::vector<std::string> eventParts = SeperateLineWordsVector(eventStr, "\t");
+
+        for(int eventIndex=0; eventIndex<timeParts.size(); eventIndex++){
+            unsigned eventID = 0;
+
+            Event eventObj;
+            eventObj.EventID = (eventID++);
+            eventObj.SequenceID = seqID;
+            eventObj.time = atof(timeParts[eventIndex].c_str());
+            eventObj.DimentionID = std::atoi(eventParts[eventIndex].c_str());
+            eventObj.marker = -1;
+            seq.Add(eventObj);
+        }
+
+        data.push_back(seq);
+        ++ seqID;
+    }
+}
+
 void ImportFromExistingUserItemSequences(const std::string& filename, const unsigned& num_users, const unsigned& num_items, std::vector<Sequence>& data)
 {
     std::ifstream fin(filename.c_str());

@@ -45,36 +45,41 @@ void outputSeq(std::vector<Sequence> & trainSequences, std::string trainSeqActio
 	
 }
 
+void saveParameters(unsigned dim, Eigen::MatrixXd A, Eigen::VectorXd Lambda0, std::string lambdaFileName, std::string alphaFileName){
+	std::ofstream lambdaFile(lambdaFileName);
+	std::ofstream alphaFile(alphaFileName);
+
+	if(lambdaFile.is_open && alphaFile.is_open){
+		for(int i=0; i<dim; i++){
+			for(int j=0; j<dim; j++){
+				alphaFile << A(i, j) << "\t";
+			}
+			alphaFile << "\n";
+			lambdaFile << Lambda0[i] << "\n";
+		}
+	}
+	alphaFile.close()
+	lambdaFile.close()
+}
+
+
 int main(const int argc, const char** argv)
 {
 	unsigned dim = 20, num_params = dim * (dim + 1);
 	Eigen::VectorXd params(num_params);
 
-	Eigen::MatrixXd B1 = (Eigen::MatrixXd::Random(dim,9).array()+1.0)/2.0;
-	Eigen::MatrixXd B2 = (Eigen::MatrixXd::Random(dim,9).array()+1.0)/2.0;
-
 	int lowRank = 9;
-	int lowNode = dim/9;
-	// for(int i=1; i<=lowRank; i++){
-	// 	for(int j=lowNode*(i-1); j<lowNode*(i+1); j++){
-	// 		B1(j, i-1) = 0.0;
-	// 		B2(j, i-1) = 0.0;
-	// 	}
-	// }
+	int lowNode = dim/lowRank;
 
-	Eigen::MatrixXd B = B1 * B2.transpose()/9;
+	Eigen::MatrixXd B1 = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
+	Eigen::MatrixXd B2 = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
+
+	Eigen::MatrixXd B = B1 * B2.transpose()/lowRank;
 
 	for(int i=1; i<lowRank; i++){
 		for(int j=(lowNode-1)*i; j<lowNode*(i+1); j++){
 			B(j, i) = 0.0;
 		}
-	}
-
-	for(int i=0; i<dim; i++){
-		for(int j=0; j<dim; j++){
-			std::cout << B(i, j) << "\t";
-		}
-		std::cout << "\n";
 	}
 	
 	Eigen::Map<Eigen::VectorXd> Lambda0 = Eigen::Map<Eigen::VectorXd>(params.segment(0, dim).data(), dim);
@@ -85,7 +90,10 @@ int main(const int argc, const char** argv)
 	A = B;
 
 	Eigen::MatrixXd beta = Eigen::MatrixXd::Constant(dim,dim,1.0);
-	
+	std::string lambdaFileName = "lambda.txt";
+	std::string alphaFileName = "alpha.txt";
+	saveParameters(dim, A, Lambda0, lambdaFileName, alphaFileName);
+
 	PlainHawkes hawkes(num_params, dim, beta);
 	hawkes.SetParameters(params);
 

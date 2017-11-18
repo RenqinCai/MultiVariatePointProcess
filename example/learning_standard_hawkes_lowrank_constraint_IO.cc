@@ -47,7 +47,7 @@ int main(const int argc, const char** argv)
 
 	std::vector<Sequence> sequences;
 
-	unsigned dim = 100;
+	unsigned dim = 1000;
 
 	ImportFromExistingUserItemSequences("data/timeFileName", "data/eventFileName", sequences);
 	unsigned num_params = dim*(dim+1);
