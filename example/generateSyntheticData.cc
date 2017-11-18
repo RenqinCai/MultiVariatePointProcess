@@ -49,7 +49,7 @@ void saveParameters(unsigned dim, Eigen::MatrixXd A, Eigen::VectorXd Lambda0, st
 	std::ofstream lambdaFile(lambdaFileName);
 	std::ofstream alphaFile(alphaFileName);
 
-	if(lambdaFile.is_open && alphaFile.is_open){
+	if(lambdaFile.is_open() && alphaFile.is_open()){
 		for(int i=0; i<dim; i++){
 			for(int j=0; j<dim; j++){
 				alphaFile << A(i, j) << "\t";
@@ -58,8 +58,8 @@ void saveParameters(unsigned dim, Eigen::MatrixXd A, Eigen::VectorXd Lambda0, st
 			lambdaFile << Lambda0[i] << "\n";
 		}
 	}
-	alphaFile.close()
-	lambdaFile.close()
+	alphaFile.close();
+	lambdaFile.close();
 }
 
 
