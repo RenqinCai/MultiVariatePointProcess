@@ -178,12 +178,14 @@ void ImportFromExistingTimeEventsSequences(const std::string &timeFileName, cons
         Sequence seq;
 
         if(std::getline(eventFin, eventStr)){
-            std::cout << "event input" << std::endl;
+            // std::cout << "event input" << std::endl;
         }else{
             std::cout << "missing event seq" << std::endl;
         }
 
         std::vector<std::string> eventParts = SeperateLineWordsVector(eventStr, "\t");
+
+        std::cout << eventParts.size() << timeParts.size() << "equal size" << std::endl;
 
         for(int eventIndex=0; eventIndex<timeParts.size(); eventIndex++){
             unsigned eventID = 0;
