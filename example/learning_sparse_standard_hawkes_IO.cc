@@ -48,10 +48,19 @@ int main(const int argc, const char** argv)
 	unsigned num_params = dim*(dim+1);
 
 	PlainHawkes hawkes_new(num_params, dim, beta);
+
 	PlainHawkes::OPTION options;
 	options.method = PlainHawkes::PLBFGS;
-	options.base_intensity_regularizer = PlainHawkes::NONE;
-	options.excitation_regularizer = PlainHawkes::NONE;
+	options.base_intensity_regularizer = PlainHawkes::L22;
+	options.excitation_regularizer = PlainHawkes::L1;
+	options.coefficients[PlainHawkes::LAMBDA] = 500;
+	options.coefficients[PlainHawkes::BETA] = 70;
+
+	
+	// PlainHawkes::OPTION options;
+	// options.method = PlainHawkes::PLBFGS;
+	// options.base_intensity_regularizer = PlainHawkes::NONE;
+	// options.excitation_regularizer = PlainHawkes::NONE;
 
 	std::cout << "2. Fitting Parameters " << std::endl << std::endl;  
 	hawkes_new.fit(sequences, options);
