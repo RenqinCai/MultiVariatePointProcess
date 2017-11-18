@@ -36,4 +36,6 @@ void wait_for_key();
 
 double SimpsonIntegral38(FunctionHandler& functor, double a, double b, unsigned n);
 
+void ImportFromExistingTimeEventsSequences(const std::string &timeFileName, const std::string &eventFileName, std::vector<Sequence>&data);
+
 #endif
