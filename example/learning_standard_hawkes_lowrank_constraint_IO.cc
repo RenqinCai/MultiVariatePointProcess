@@ -26,7 +26,7 @@ int main(const int argc, const char** argv)
 
 	unsigned dim = 30;
 
-	ImportFromExistingTimeEventsSequences("data/timeFileName", "data/eventFileName", sequences);
+	ImportFromExistingTimeEventsSequences("../data/timeFileName", "../data/eventFileName", sequences);
 	
 	Eigen::MatrixXd beta = Eigen::MatrixXd::Constant(dim,dim,1.0);
 
