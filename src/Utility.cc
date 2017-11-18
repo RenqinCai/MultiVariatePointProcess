@@ -178,7 +178,7 @@ void ImportFromExistingTimeEventsSequences(const std::string &timeFileName, cons
         Sequence seq;
 
         if(std::getline(eventFin, eventStr)){
-              
+            std::cout << "event input" << std::endl;
         }else{
             std::cout << "missing event seq" << std::endl;
         }
@@ -191,7 +191,7 @@ void ImportFromExistingTimeEventsSequences(const std::string &timeFileName, cons
             Event eventObj;
             eventObj.EventID = (eventID++);
             eventObj.SequenceID = seqID;
-            eventObj.time = atof(timeParts[eventIndex].c_str());
+            eventObj.time = std::atof(timeParts[eventIndex].c_str());
             eventObj.DimentionID = std::atoi(eventParts[eventIndex].c_str());
             eventObj.marker = -1;
             seq.Add(eventObj);
