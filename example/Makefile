@@ -20,11 +20,11 @@ build/learning_sparse_standard_hawkes_IO : learning_sparse_standard_hawkes_IO.cc
 	$(dir_guard)
 	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -lptpack
 
-build/learning_sparse_standard_hawkes_IO : learning_standard_hawkes_lowrank_constraint_IO.cc $(ptpack_lib)
+build/learning_standard_hawkes_lowrank_constraint_IO : learning_standard_hawkes_lowrank_constraint_IO.cc $(ptpack_lib)
 	$(dir_guard)
 	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -lptpack
 
-build/learning_sparse_standard_hawkes_IO : learning_standard_hawkes_IO.cc $(ptpack_lib)
+build/learning_standard_hawkes_IO : learning_standard_hawkes_IO.cc $(ptpack_lib)
 	$(dir_guard)
 	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -lptpack
 
