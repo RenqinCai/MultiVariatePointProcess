@@ -41,7 +41,15 @@ int main(const int argc, const char** argv)
 
 	unsigned dim = 30;
 
-	ImportFromExistingTimeEventsSequences("../data/timeFileName", "../data/eventFileName", sequences);
+	std::string timeFileName = "../data/sparseTrainSeqTime"; 
+	std::string timeFileName = "../data/fullTrainSeqTime";
+	std::string timeFileName = "../data/lowrankTrainSeqTime";
+
+	std::string eventFileName = "../data/sparseTrainSeqAction";
+	std::string eventFileName = "../data/fullTrainSeqAction";
+	std::string eventFileName = "../data/lowrankTrainSeqAction";
+
+	ImportFromExistingTimeEventsSequences(timeFileName, eventFileName, sequences);
 	Eigen::MatrixXd beta = Eigen::MatrixXd::Constant(dim,dim,1);
 
 	unsigned num_params = dim*(dim+1);
