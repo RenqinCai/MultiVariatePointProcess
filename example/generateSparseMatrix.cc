@@ -126,11 +126,11 @@ int main(const int argc, const char** argv)
 		}
 	}
 
-	std::string trainSeqActionFileName = "trainSeqAction.txt";
-	std::string trainSeqTimeFileName = "trainSeqTime.txt";
+	std::string trainSeqActionFileName = "sparseTrainSeqAction.txt";
+	std::string trainSeqTimeFileName = "sparseTrainSeqTime.txt";
 
-	std::string testSeqActionFileName = "testSeqAction.txt";
-	std::string testSeqTimeFileName = "testSeqTime.txt";
+	std::string testSeqActionFileName = "sparseTestSeqAction.txt";
+	std::string testSeqTimeFileName = "sparseTestSeqTime.txt";
 	outputSeq(trainSequences, trainSeqActionFileName, trainSeqTimeFileName, testSequences, testSeqActionFileName, testSeqTimeFileName);
 
 	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();

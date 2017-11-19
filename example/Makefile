@@ -16,17 +16,17 @@ CXX := g++
 
 all : build/learning_network_dynamics_exp_kernel build/learning_network_structure_exp_kernel build/learning_network_dynamics_general_kernel build/learning_network_structure_general_kernel build/learning_sparse_standard_hawkes build/learning_standard_hawkes build/learning_standard_hawkes_lowrank_constraint build/learning_lowrank_hawkes build/learning_standard_hawkes build/learning_standard_hawkes_learning_triggering_kernel build/influence_maximization build/learning_standard_self_inhibiting_process build/learning_sparse_self_inhibiting_process build/fast_simulating_standard_hawkes build/learning_hawkes_with_customized_kernel build/learning_sparse_hawkes_with_customized_kernel build/basic_residual_analysis build/generateSyntheticData build/learning_sparse_standard_hawkes_IO build/learning_standard_hawkes_lowrank_constraint_IO build/learning_standard_hawkes_IO build/generateSparseMatrix build/generateLowRankMatrix build/generateFullMatrix
 
-build/generateSparseMatrix : generateSparseMatrix.cc $(ptpack_lib)
-	$(dir_guard)
-	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -
+# build/generateSparseMatrix : generateSparseMatrix.cc $(ptpack_lib)
+# 	$(dir_guard)
+# 	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -
 
-build/generateLowRankMatrix : generateLowRankMatrix.cc $(ptpack_lib)
-	$(dir_guard)
-	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -lptpack
+# build/generateLowRankMatrix : generateLowRankMatrix.cc $(ptpack_lib)
+# 	$(dir_guard)
+# 	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -lptpack
 
-build/generateFullMatrix : generateFullMatrix.cc $(ptpack_lib)
-	$(dir_guard)
-	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -lptpack
+# build/generateFullMatrix : generateFullMatrix.cc $(ptpack_lib)
+# 	$(dir_guard)
+# 	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(lib_dir) -lptpack
 
 build/learning_sparse_standard_hawkes_IO : learning_sparse_standard_hawkes_IO.cc $(ptpack_lib)
 	$(dir_guard)
