@@ -81,7 +81,7 @@ int main(const int argc, const char** argv)
 	// 	}
 	// }
 
-	Eigen::MatrixXd B = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
+	Eigen::MatrixXd B = (Eigen::MatrixXd::Random(dim,dim).array()+1.0)/2.0;
 
 	// for(int i=1; i<lowRank; i++){
 	// 	for(int j=(lowNode-1)*i; j<lowNode*(i+1); j++){
