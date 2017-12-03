@@ -16,6 +16,53 @@ void saveParameters(Eigen::VectorXd params, std::string estimatedParamFileName){
 	estimatedParamFile.close();
 }
 
+double computeAP(const int& eventID, const int &num_dims, Eigen::VectorXd& predictIntensity_dim){
+	double AP = 0.0;
+	std::vector<std::pair<double, unsigned>> intensity_list;
+	for(int i=0; i<num_dims; i++){
+		intensity_list.push_back(std::make_pair(predictIntensity_dim[i], i));
+	}
+	std::sort(intensity_list.begin(), intensity_list.end(), std::greater<std::pair<double, unsigned>>());
+
+	for(int i=0; i<num_dims; i++){
+		if(intensity_list[i].second == eventID){
+			AP = 1.0/i;
+			return AP;
+		}
+	}
+
+	return AP;
+}
+
+void predictNextEvent(PlainHawkes& hawkesObj, const std::vector<Sequence>& data, double validRatio, int num_dims){
+	int num_sequences = data.size();
+	double MAP = 0;
+	double AP = 0;
+	double totalTestLen = 0;
+	for(int k=0; k<num_sequences; k++){
+		Sequence seq = data[k];
+		const std::vector<Event>& seqEvents = seq.GetEvents();
+		int seqLen = seqEvents.size();
+		int validLen = (int) (seqLen*validRatio);
+		int testLen = seqLen - validLen;
+
+		for(int eventIndex=validLen; eventIndex<testLen; ++eventIndex){
+			double eventTime = seqEvents[eventIndex].time;
+			int eventID = seqEvents[eventIndex].EventID;
+			Eigen::VectorXd predictIntensity_dim = Eigen::VectorXd::Zero(num_dims);
+			hawkesObj.Intensity(eventTime, seq, predictIntensity_dim);
+			AP=computeAP(eventID, num_dims, predictIntensity_dim);
+			MAP += AP;
+		}
+		totalTestLen += testLen;
+
+	}
+
+	std::cout << "totalTestLen\t" << totalTestLen << std::endl;
+	std::cout << "MAP \t" << MAP << std::endl;
+
+}
+
 int main(const int argc, const char** argv)
 {
 	// unsigned dim = 2, num_params = dim * (dim + 1);
@@ -37,20 +84,20 @@ int main(const int argc, const char** argv)
 	// std::cout << "1. Simulating " << num_sequences << " sequences with " << num_events << " events each " << std::endl;
 
 	// ot.Simulate(hawkes, num_events, num_sequences, sequences);
-	std::vector<Sequence> sequences;
+	std::vector<Sequence> trainSequences;
 
 	unsigned dim = 716;
 
-	std::string timeFileName = "../data/walmartTrainSeqTime.txt"; 
+	std::string trainTimeFileName = "../data/walmartTrainSeqTime.txt"; 
 //	std::string timeFileName = "../data/fullTrainSeqTime.txt";
 //	std::string timeFileName = "../data/lowrankTrainSeqTime.txt";
 	// std::string timeFileName = "../data/trainSeqTime.txt";
 
-	std::string eventFileName = "../data/walmartTrainSeqAction.txt";
+	std::string trainEventFileName = "../data/walmartTrainSeqAction.txt";
 //	std::string eventFileName = "../data/fullTrainSeqAction.txt";
 //	std::string eventFileName = "../data/lowrankTrainSeqAction.txt";
 	// std::string eventFileName = "../data/trainSeqAction.txt";
-	ImportFromExistingTimeEventsSequences(timeFileName, eventFileName, sequences);
+	ImportFromExistingTimeEventsSequences(trainTimeFileName, trainEventFileName, trainSequences);
 	Eigen::MatrixXd beta = Eigen::MatrixXd::Constant(dim,dim,1);
 
 	unsigned num_params = dim*(dim+1);
@@ -62,7 +109,7 @@ int main(const int argc, const char** argv)
 	options.excitation_regularizer = PlainHawkes::NONE;
 
 	std::cout << "2. Fitting Parameters " << std::endl << std::endl;  
-	hawkes_new.fit(sequences, options);
+	hawkes_new.fit(trainSequences, options);
 	
 	std::cout << "Estimated Parameters : " << std::endl;
 	// std::cout << hawkes_new.GetParameters().transpose() << std::endl;
@@ -71,5 +118,12 @@ int main(const int argc, const char** argv)
 	saveParameters(hawkes_new.GetParameters().transpose(), estimatedParamFile);
 	// std::cout << params.transpose() << std::endl;
 
+	std::vector<Sequence> testSequences;
+	std::string testTimeFileName = "../data/testWalmartTrainSeqTime.txt";
+	std::string testEventFileName = "../data/testWalmartTrainSeqAction.txt";
+	ImportFromExistingTimeEventsSequences(testTimeFileName, testEventFileName, testSequences);
+
+	double validRatio = 0.8;
+	predictNextEvent(hawkes_new, testSequences, validRatio, dim);
 	return 0;
 }
