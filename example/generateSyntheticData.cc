@@ -70,18 +70,56 @@ int main(const int argc, const char** argv)
 	int lowRank = 6;
 	int lowNode = dim/lowRank;
 
-	Eigen::MatrixXd B1 = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
-	Eigen::MatrixXd B2 = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
-
-	Eigen::MatrixXd B = B1 * B2.transpose()/lowRank;
-
-	for(int i=1; i<lowRank; i++){
-		for(int j=(lowNode-1)*i; j<lowNode*(i+1); j++){
-			B(j, i) = 0.0;
+	Eigen::MatrixXd B1 = Eigen::MatrixXd::Zero(dim,lowRank);
+	for(int i=0; i<lowRank; i++){
+		for(int j=lowNode*i+1; j<lowNode*(i+1); j++){
+			B1(j, i) = ((double) rand() / (RAND_MAX));
 		}
 	}
+
+	 Eigen::MatrixXd B2 = Eigen::MatrixXd::Zero(dim,lowRank);
+	 for(int i=0; i<lowRank; i++){
+		 for(int j=lowNode*i+1; j<lowNode*(i+1); j++){
+	              B2(j, i) = ((double) rand() / (RAND_MAX));
+                 }
+         }  
 	
-	Eigen::Map<Eigen::VectorXd> Lambda0 = Eigen::Map<Eigen::VectorXd>(params.segment(0, dim).data(), dim);
+//	Eigen::MatrixXd B2 = Eigen::MatrixXd::Zeros(dim,lowRank);
+	
+//	Eigen::MatrixXd B1 = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
+//	Eigen::MatrixXd B2 = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
+
+	Eigen::MatrixXd B = B1 * B2.transpose();
+//	for(int i=0; i<20; i++)
+//	std::cout << Eigen::Vector3i::Random().array()+1.0<< std::endl;
+//	for(int i=1; i<lowRank; i++){
+//		for(int j=(lowNode-1)*i; j<lowNode*(i+1); j++){
+//			B(j, i) = 0.0;
+//		}
+//	}
+//	float zeroNum = 0.0;
+//	 for(int i=1; i<25; i++){
+//	 	for(int j=(lowNode-1)*(i-1); j<lowNode*(i+2); j++){
+  //                     int k = j%30;
+//		       B(k, i) = 0.0;
+  //                     zeroNum ++;
+    //            }
+//	 }
+	float zeroNum = 0.0;
+	for(int i=0; i<dim; i++){
+		for(int j=0; j<dim; j++){
+			if(B(i, j)==0.0){
+				zeroNum += 1;
+			}
+		}
+	}
+	B = B/3.5;	
+	 float sparseRatio = zeroNum*1.0/(30*30);
+	 Eigen::VectorXcd eivals = B.eigenvalues();
+	 std::cout << eivals << std::endl;
+	 std::cout << sparseRatio << std::endl;
+	
+	 Eigen::Map<Eigen::VectorXd> Lambda0 = Eigen::Map<Eigen::VectorXd>(params.segment(0, dim).data(), dim);
 	
 	Eigen::Map<Eigen::MatrixXd> A = Eigen::Map<Eigen::MatrixXd>(params.segment(dim, dim * dim).data(), dim, dim);
 

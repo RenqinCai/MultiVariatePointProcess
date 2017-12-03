@@ -67,7 +67,7 @@ int main(const int argc, const char** argv)
 	unsigned dim = 30, num_params = dim * (dim + 1);
 	Eigen::VectorXd params(num_params);
 
-	int lowRank = 6;
+	int lowRank = 20;
 	int lowNode = dim/lowRank;
 
 	Eigen::MatrixXd B1 = (Eigen::MatrixXd::Random(dim,lowRank).array()+1.0)/2.0;
@@ -80,7 +80,10 @@ int main(const int argc, const char** argv)
 	// 		B(j, i) = 0.0;
 	// 	}
 	// }
-	
+	B = B/10;	
+	Eigen::VectorXcd eivals = B.eigenvalues();
+	std::cout << eivals << std::endl;
+
 	Eigen::Map<Eigen::VectorXd> Lambda0 = Eigen::Map<Eigen::VectorXd>(params.segment(0, dim).data(), dim);
 	
 	Eigen::Map<Eigen::MatrixXd> A = Eigen::Map<Eigen::MatrixXd>(params.segment(dim, dim * dim).data(), dim, dim);
@@ -89,8 +92,8 @@ int main(const int argc, const char** argv)
 	A = B;
 
 	Eigen::MatrixXd beta = Eigen::MatrixXd::Constant(dim,dim,1.0);
-	std::string lambdaFileName = "lowRankLambda.txt";
-	std::string alphaFileName = "lowRankAlpha.txt";
+	std::string lambdaFileName = "lowrankLambda.txt";
+	std::string alphaFileName = "lowrankAlpha.txt";
 	saveParameters(dim, A, Lambda0, lambdaFileName, alphaFileName);
 
 	PlainHawkes hawkes(num_params, dim, beta);

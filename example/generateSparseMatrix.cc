@@ -82,13 +82,51 @@ int main(const int argc, const char** argv)
 	// }
 
 	Eigen::MatrixXd B = (Eigen::MatrixXd::Random(dim,dim).array()+1.0)/2.0;
+	std::cout << "construct sparse matrix" << std::endl;	
+	double zeroNum = 0;
 
-	for(int i=1; i<lowRank; i++){
+	// Eigen::MatrixXd B = Eigen::MatrixXd::Zero(dim, dim).array();
+	// B(0, 0) = 0.5;
+	// B(1, 0) = 0.5;
+	// B(2, 0) = 0.8;
+	// B(2, 1) = 0.2;
+	// B(3, 1) = 0.5;
+	// B(4, 4) = 0.5;
+	// B(5, 2) = 0.5;
+	// B(5, 4) = 0.5;
+	// B(5, 5) = 0.5;
+	 	
+
+/*	for(int i=1; i<lowRank; i++){
 		for(int j=(lowNode-1)*i; j<lowNode*(i+1); j++){
 			B(j, i) = 0.0;
+			zeroNum ++;
 		}
 	}
-	
+*/
+	for(int i=1; i<18; i++){
+		for(int j=(lowNode-1)*i; j<lowNode*(i+3); j++){
+			int k= j%30;
+			B(k, i) = 0.0;
+			zeroNum ++;
+		}
+	}
+
+//	for(int i=1; i<25; i++){
+//		for(int j=(lowNode-1)*(i-1); j<lowNode*(i+2); j++){
+//			int k = j%30;
+//			B(k, i) = 0.0;
+//			zeroNum ++;
+//		}
+//	}
+	B = B/20.0;
+	double totalNum = dim*dim*1.0;
+	std::cout << "sparse ratio\t" << zeroNum*1.0/totalNum << std::endl;
+
+//	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(Eigen::Map<Eigen::MatrixXd> B);
+	Eigen::VectorXcd eivals = B.eigenvalues();
+//	std::cout << eivals.maxCoeff() << std::endl;
+	std::cout << eivals << std::endl;
 	Eigen::Map<Eigen::VectorXd> Lambda0 = Eigen::Map<Eigen::VectorXd>(params.segment(0, dim).data(), dim);
 	
 	Eigen::Map<Eigen::MatrixXd> A = Eigen::Map<Eigen::MatrixXd>(params.segment(dim, dim * dim).data(), dim, dim);
@@ -100,7 +138,7 @@ int main(const int argc, const char** argv)
 	std::string lambdaFileName = "sparseLambda.txt";
 	std::string alphaFileName = "sparseAlpha.txt";
 	saveParameters(dim, A, Lambda0, lambdaFileName, alphaFileName);
-
+	
 	PlainHawkes hawkes(num_params, dim, beta);
 	hawkes.SetParameters(params);
 
@@ -109,7 +147,7 @@ int main(const int argc, const char** argv)
 
 	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
-	unsigned num_events = 50, num_sequences = 4000;
+	unsigned num_events = 1000, num_sequences = 2000;
 	std::cout << "1. Simulating " << num_sequences << " sequences with " << num_events << " events each " << std::endl;
 	ot.Simulate(hawkes, num_events, num_sequences, sequences);
 
