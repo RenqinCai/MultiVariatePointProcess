@@ -27,12 +27,12 @@ int main(const int argc, const char** argv)
 	unsigned dim = 30;
 
 	std::string timeFileName = "../data/sparseTrainSeqTime"; 
-	std::string timeFileName = "../data/fullTrainSeqTime";
-	std::string timeFileName = "../data/lowrankTrainSeqTime";
+	// std::string timeFileName = "../data/fullTrainSeqTime";
+	// std::string timeFileName = "../data/lowrankTrainSeqTime";
 
 	std::string eventFileName = "../data/sparseTrainSeqAction";
-	std::string eventFileName = "../data/fullTrainSeqAction";
-	std::string eventFileName = "../data/lowrankTrainSeqAction";
+	// std::string eventFileName = "../data/fullTrainSeqAction";
+	// std::string eventFileName = "../data/lowrankTrainSeqAction";
 
 	ImportFromExistingTimeEventsSequences(timeFileName, eventFileName, sequences);
 	
