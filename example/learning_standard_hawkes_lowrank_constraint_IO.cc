@@ -24,15 +24,17 @@ int main(const int argc, const char** argv)
 
 	std::vector<Sequence> sequences;
 
-	unsigned dim = 30;
+	unsigned dim = 716;
 
-	std::string timeFileName = "../data/sparseTrainSeqTime"; 
-	// std::string timeFileName = "../data/fullTrainSeqTime";
-	// std::string timeFileName = "../data/lowrankTrainSeqTime";
+	std::string timeFileName = "../data/walmartTrainSeqTime.txt"; 
+//	std::string timeFileName = "../data/fullTrainSeqTime.txt";
+//	std::string timeFileName = "../data/lowrankTrainSeqTime.txt";
+	// std::string timeFileName = "../data/trainSeqTime.txt";
 
-	std::string eventFileName = "../data/sparseTrainSeqAction";
-	// std::string eventFileName = "../data/fullTrainSeqAction";
-	// std::string eventFileName = "../data/lowrankTrainSeqAction";
+	std::string eventFileName = "../data/walmartTrainSeqAction.txt";
+//	std::string eventFileName = "../data/fullTrainSeqAction.txt";
+//	std::string eventFileName = "../data/lowrankTrainSeqAction.txt";
+	// std::string eventFileName = "../data/trainSeqAction.txt";
 
 	ImportFromExistingTimeEventsSequences(timeFileName, eventFileName, sequences);
 	

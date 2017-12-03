@@ -80,9 +80,9 @@ int main(const int argc, const char** argv)
 	std::cout << Lambda0_hat.transpose() << std::endl << std::endl;
 	std::cout << A_hat << std::endl << std::endl;
 
-	std::cout << "True Parameters " << std::endl;
-	std::cout << Lambda0.transpose() << std::endl << std::endl;
-	std::cout << A << std::endl << std::endl;
+	// std::cout << "True Parameters " << std::endl;
+	// std::cout << Lambda0.transpose() << std::endl << std::endl;
+	// std::cout << A << std::endl << std::endl;
 
 	return 0;
 }

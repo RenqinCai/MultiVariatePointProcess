@@ -83,6 +83,9 @@ int main(const int argc, const char** argv)
 
 	Eigen::MatrixXd B = (Eigen::MatrixXd::Random(dim,dim).array()+1.0)/2.0;
 
+	B = B/20;
+	Eigen::VectorXcd eivals = B.eigenvalues();
+	std::cout << eivals << std::endl;
 	// for(int i=1; i<lowRank; i++){
 	// 	for(int j=(lowNode-1)*i; j<lowNode*(i+1); j++){
 	// 		B(j, i) = 0.0;

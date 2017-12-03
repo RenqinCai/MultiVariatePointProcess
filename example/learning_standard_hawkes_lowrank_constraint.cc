@@ -11,9 +11,12 @@ int main(const int argc, const char** argv)
 /**
  * Generate a 5-by-5 matrix with rank 2.
  */
+
 	Eigen::MatrixXd B1 = (Eigen::MatrixXd::Random(dim,2).array() + 1) / 2;
 	Eigen::MatrixXd B2 = (Eigen::MatrixXd::Random(dim,2).array() + 1) / 2;
-
+	
+	std::cout << B1 << std::endl;
+	std::cout << B2 << std::endl;
 /**
  * Simply guarantee the stationary condition of the mulivariate Hawkes process.
  */
