@@ -18,6 +18,54 @@ void saveParameters(Eigen::VectorXd params, std::string estimatedParamFileName){
 	estimatedParamFile.close();
 }
 
+double computeAP(const int& eventID, const int &num_dims, Eigen::VectorXd& predictIntensity_dim){
+	double AP = 0.0;
+	std::vector<std::pair<double, int>> intensity_list;
+	for(int i=0; i<num_dims; i++){
+		intensity_list.push_back(std::make_pair(predictIntensity_dim[i], i));
+	}
+	std::sort(intensity_list.begin(), intensity_list.end(), std::greater<std::pair<double, int>>());
+
+	for(int i=0; i<num_dims; i++){
+		//std::cout << "prediction" << intensity_list[i].second << std::endl;
+		if(intensity_list[i].second == eventID){
+			AP = 1.0/(i+1);
+			return AP;
+		}
+	}
+
+	return AP;
+}
+
+void predictNextEvent(PlainHawkes& hawkesObj, const std::vector<Sequence>& data, double validRatio, int num_dims){
+	int num_sequences = data.size();
+	double MAP = 0;
+	double AP = 0;
+	double totalTestLen = 0;
+	for(int k=0; k<num_sequences; k++){
+		Sequence seq = data[k];
+		const std::vector<Event>& seqEvents = seq.GetEvents();
+		int seqLen = seqEvents.size();
+		int validLen = (int) (seqLen*validRatio);
+		int testLen = seqLen - validLen;
+
+		for(int eventIndex=validLen; eventIndex<seqLen; ++eventIndex){
+			double eventTime = seqEvents[eventIndex].time;
+			int eventID = seqEvents[eventIndex].EventID;
+			//std::cout << "truth event id" << eventID;
+			Eigen::VectorXd predictIntensity_dim = Eigen::VectorXd::Zero(num_dims);
+			hawkesObj.Intensity(eventTime, seq, predictIntensity_dim);
+			AP=computeAP(eventID, num_dims, predictIntensity_dim);
+			MAP += AP;
+		}
+		totalTestLen += testLen;
+
+	}
+	MAP = MAP/totalTestLen;
+	std::cout << "totalTestLen\t" << totalTestLen << std::endl;
+	std::cout << "MAP \t" << MAP << std::endl;
+
+}
 
 int main(const int argc, const char** argv)
 {
@@ -53,7 +101,7 @@ int main(const int argc, const char** argv)
 	options.ini_learning_rate = 5e-5;
 	options.rho = 1;
 	options.ub_nuclear = 1;
-	options.ini_max_iter = 1000;
+	options.ini_max_iter = 10000;
 
 	Eigen::VectorXd params(num_params);
 
@@ -75,6 +123,15 @@ int main(const int argc, const char** argv)
 	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 	std::cout << duration / 1000000.0 << " secs." << std::endl;
+	
+	
+	std::vector<Sequence> testSequences;
+	std::string testTimeFileName = "../data/walmartTestSeqTime.txt";
+	std::string testEventFileName = "../data/walmartTestSeqAction.txt";
+	ImportFromExistingTimeEventsSequences(testTimeFileName, testEventFileName, testSequences);
+
+	double validRatio = 0.8;
+	predictNextEvent(hawkes_new, testSequences, validRatio, dim);
 
 	return 0;
 }

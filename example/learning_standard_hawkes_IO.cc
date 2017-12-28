@@ -18,15 +18,16 @@ void saveParameters(Eigen::VectorXd params, std::string estimatedParamFileName){
 
 double computeAP(const int& eventID, const int &num_dims, Eigen::VectorXd& predictIntensity_dim){
 	double AP = 0.0;
-	std::vector<std::pair<double, unsigned>> intensity_list;
+	std::vector<std::pair<double, int>> intensity_list;
 	for(int i=0; i<num_dims; i++){
 		intensity_list.push_back(std::make_pair(predictIntensity_dim[i], i));
 	}
-	std::sort(intensity_list.begin(), intensity_list.end(), std::greater<std::pair<double, unsigned>>());
+	std::sort(intensity_list.begin(), intensity_list.end(), std::greater<std::pair<double, int>>());
 
 	for(int i=0; i<num_dims; i++){
+		//std::cout << "prediction" << intensity_list[i].second << std::endl;
 		if(intensity_list[i].second == eventID){
-			AP = 1.0/i;
+			AP = 1.0/(i+1);
 			return AP;
 		}
 	}
@@ -46,9 +47,10 @@ void predictNextEvent(PlainHawkes& hawkesObj, const std::vector<Sequence>& data,
 		int validLen = (int) (seqLen*validRatio);
 		int testLen = seqLen - validLen;
 
-		for(int eventIndex=validLen; eventIndex<testLen; ++eventIndex){
+		for(int eventIndex=validLen; eventIndex<seqLen; ++eventIndex){
 			double eventTime = seqEvents[eventIndex].time;
 			int eventID = seqEvents[eventIndex].EventID;
+			//std::cout << "truth event id" << eventID;
 			Eigen::VectorXd predictIntensity_dim = Eigen::VectorXd::Zero(num_dims);
 			hawkesObj.Intensity(eventTime, seq, predictIntensity_dim);
 			AP=computeAP(eventID, num_dims, predictIntensity_dim);
@@ -57,7 +59,7 @@ void predictNextEvent(PlainHawkes& hawkesObj, const std::vector<Sequence>& data,
 		totalTestLen += testLen;
 
 	}
-
+	MAP = MAP/totalTestLen;
 	std::cout << "totalTestLen\t" << totalTestLen << std::endl;
 	std::cout << "MAP \t" << MAP << std::endl;
 
@@ -86,14 +88,14 @@ int main(const int argc, const char** argv)
 	// ot.Simulate(hawkes, num_events, num_sequences, sequences);
 	std::vector<Sequence> trainSequences;
 
-	unsigned dim = 716;
+	unsigned dim = 2527;
 
-	std::string trainTimeFileName = "../data/walmartTrainSeqTime.txt"; 
+	std::string trainTimeFileName = "../data/walmartTrainSeqTime_popular.txt"; 
 //	std::string timeFileName = "../data/fullTrainSeqTime.txt";
 //	std::string timeFileName = "../data/lowrankTrainSeqTime.txt";
 	// std::string timeFileName = "../data/trainSeqTime.txt";
 
-	std::string trainEventFileName = "../data/walmartTrainSeqAction.txt";
+	std::string trainEventFileName = "../data/walmartTrainSeqAction_popular.txt";
 //	std::string eventFileName = "../data/fullTrainSeqAction.txt";
 //	std::string eventFileName = "../data/lowrankTrainSeqAction.txt";
 	// std::string eventFileName = "../data/trainSeqAction.txt";
@@ -114,13 +116,13 @@ int main(const int argc, const char** argv)
 	std::cout << "Estimated Parameters : " << std::endl;
 	// std::cout << hawkes_new.GetParameters().transpose() << std::endl;
 	// std::cout << "True Parameters : " << std::endl;
-	std::string estimatedParamFile = "standard_hawkes_estimatedParam.txt";
+	std::string estimatedParamFile = "standard_hawkes_estimatedParam_popular.txt";
 	saveParameters(hawkes_new.GetParameters().transpose(), estimatedParamFile);
 	// std::cout << params.transpose() << std::endl;
 
 	std::vector<Sequence> testSequences;
-	std::string testTimeFileName = "../data/testWalmartTrainSeqTime.txt";
-	std::string testEventFileName = "../data/testWalmartTrainSeqAction.txt";
+	std::string testTimeFileName = "../data/walmartTestSeqTime_popular.txt";
+	std::string testEventFileName = "../data/walmartTestSeqAction_popular.txt";
 	ImportFromExistingTimeEventsSequences(testTimeFileName, testEventFileName, testSequences);
 
 	double validRatio = 0.8;
